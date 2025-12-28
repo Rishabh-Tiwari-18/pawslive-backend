@@ -8,39 +8,45 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration
+// 1. Define allowed origins
 const allowedOrigins = [
-  "https://pawslive.vercel.app", // production frontend
-  "http://localhost:5173",       // local frontend
+  "https://pawslive.vercel.app",
+  "http://localhost:5173"
 ];
 
+// 2. Robust CORS Configuration
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps or curl)
+      // Allow requests with no origin (like mobile apps, curl, or Postman)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-        return callback(new Error(msg), false);
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
       }
-      return callback(null, true);
     },
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Required if you use cookies or Authorization headers
   })
 );
 
-// Handle preflight OPTIONS requests
+// 3. Explicitly handle Pre-flight requests for all routes
 app.options("*", cors());
 
-// Body parser
 app.use(express.json());
 
 // Routes
 app.use("/api/contact", contactRoute);
 app.use("/api/book-appointment", bookingRoute);
 
-// Start server
+// Basic health check
+app.get("/", (req, res) => {
+  res.send("Server is running perfectly!");
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
