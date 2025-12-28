@@ -8,6 +8,12 @@ import bookingRoute from "./routes/bookingRoute.js";  // Should import routes, n
 dotenv.config();
 
 const app = express();
+app.use(
+  cors({
+    origin: ["https://pawslive.vercel.app" || "https://localhost:8080"], // your frontend URL
+    methods: ["GET", "POST", "OPTIONS"],
+  })
+);
 
 app.use(cors());
 app.use(express.json());
