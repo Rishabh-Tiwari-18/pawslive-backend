@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import connectDB from "./db.js";  // No need to connect DB if not using MongoDB anymore
+// import connectDB from "./db.js";  // No need to connect DB if not using MongoDB anymore
 import contactRoute from "./routes/contactRoute.js";
 import bookingRoute from "./routes/bookingRoute.js";  // Should import routes, not controller directly
 
@@ -16,9 +16,9 @@ app.use("/api/contact", contactRoute);
 app.use("/api/book-appointment", bookingRoute);
 
 // No DB connection now
-connectDB();
+// connectDB();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
